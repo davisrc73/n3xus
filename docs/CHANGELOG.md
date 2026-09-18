@@ -6,14 +6,17 @@ Este documento mantém o registo contínuo de todas as atualizações, novas fea
 ### Adicionado
 - Setup inicial da infraestrutura (`docker-compose.yml`) com serviços para o Astro (Frontend) e PocketBase (Backend).
 - Implementação visual do Dashboard Global com a metodologia Bento Box.
-- Ecrã de "Staging / Validação" de CSV (Staging Grid).
-- Criação do sistema centralizado de documentação.
+- Scripting de automação DevOps (`git_sync.sh` e `nas_autoupdate.sh`).
+- Esquema de coleções para importação direta no PocketBase (`pb_schema.json`).
+- Integração da framework **Svelte** no Astro para estado reativo.
+- Componente de Validação de CSV interativo com leitura *Client-Side* via `papaparse` (`CsvStaging.svelte`).
+- Cliente oficial SDK ligado ao frontend (`pocketbase.ts`).
+- Manuais complementados (`VERSIONAMENTO.md`, `MANUAL_UTILIZADOR.md`).
 
 ### Por Fazer
-- Ligação do SDK do PocketBase ao Astro.
-- Configuração das coleções no PocketBase (`users`, `transactions`, `categories`, `assets_amortizations`).
+- Injeção das aprovações da grelha de Staging diretamente na DB (transações).
+- Desenvolvimento do Dashboard com leitura real a partir do PocketBase.
 - Lógica de autenticação e RBAC.
-- Parsing e upload real de ficheiros CSV.
 
 ## [0.1.0] - 2026-09-18
 - Inicialização do repositório P&L.

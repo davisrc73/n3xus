@@ -1,8 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import CsvStaging from '../components/CsvStaging.astro';
+import CsvStaging from '../components/CsvStaging.svelte';
 ---
 
-<Layout title="Importar CSV - P&L">
-	<CsvStaging />
+<Layout title="Importar CSV - P&L Global">
+  <div class="mb-8">
+    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Importação Bancária</h1>
+    <p class="text-slate-500">Faz o upload do teu ficheiro CSV. O sistema irá tentar pré-categorizar os movimentos automaticamente baseando-se no histórico.</p>
+  </div>
+  
+  <CsvStaging client:load />
 </Layout>

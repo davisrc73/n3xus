@@ -13,11 +13,19 @@
   },
   "dependencies": {
     "@astrojs/node": "^11.1.6",
+    "@astrojs/svelte": "^9.0.1",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.3",
-    "tailwindcss": "^4.3.3"
+    "papaparse": "^5.7.0",
+    "pocketbase": "^0.28.1",
+    "svelte": "^5.57.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^6.0.3"
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5.5.2"
   }
 }
