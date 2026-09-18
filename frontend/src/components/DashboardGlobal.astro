@@ -1,0 +1,121 @@
+---
+// Components for the Bento Box Dashboard
+---
+
+<div class="space-y-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Visão Geral Consolidada</h2>
+    <div class="text-sm text-slate-500 font-medium">Última atualização: Hoje, 14:00</div>
+  </div>
+
+  <!-- Bento Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+    <!-- Património Global (Oceanic / Real Estate theme) -->
+    <div class="col-span-1 md:col-span-2 bg-slate-900 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden group">
+      <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-500 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+      <h3 class="text-slate-300 font-medium mb-1 relative z-10">Património Líquido</h3>
+      <div class="text-4xl md:text-5xl font-bold tracking-tight mb-6 relative z-10">€ 245.890,50</div>
+      
+      <div class="grid grid-cols-2 gap-4 mt-8 relative z-10 border-t border-slate-700/50 pt-6">
+        <div>
+          <p class="text-slate-400 text-sm font-medium mb-1">Ativos (Imóveis, Contas)</p>
+          <p class="text-xl font-semibold text-emerald-400">€ 380.000,00</p>
+        </div>
+        <div>
+          <p class="text-slate-400 text-sm font-medium mb-1">Passivos (Crédito Habitação)</p>
+          <p class="text-xl font-semibold text-rose-400">€ 134.109,50</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cashflow Mensal (Family Theme) -->
+    <div class="col-span-1 bg-emerald-50 rounded-3xl p-6 shadow-sm border border-emerald-100 flex flex-col justify-between">
+      <div>
+        <h3 class="text-emerald-800 font-medium mb-1">Cashflow Mensal (Outubro)</h3>
+        <div class="text-3xl font-bold tracking-tight text-emerald-600 mb-2">+ € 1.250,00</div>
+        <div class="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-200/50 px-2 py-1 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" />
+          </svg>
+          12% face ao mês passado
+        </div>
+      </div>
+      
+      <!-- Placeholder Bar Chart -->
+      <div class="mt-6 flex items-end gap-2 h-24">
+        <div class="w-full bg-emerald-200 rounded-t-sm h-3/4 relative group"><div class="hidden group-hover:block absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded">Receitas</div></div>
+        <div class="w-full bg-rose-200 rounded-t-sm h-1/2 relative group"><div class="hidden group-hover:block absolute -top-8 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded">Despesas</div></div>
+      </div>
+    </div>
+
+    <!-- I Love Paul do Mar (Project Theme) -->
+    <div class="col-span-1 md:col-span-1 bg-gradient-to-br from-orange-50 to-amber-100 rounded-3xl p-6 shadow-sm border border-orange-200">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 rounded-lg bg-orange-500 text-white flex items-center justify-center shadow-md">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <h3 class="text-orange-900 font-bold">I Love Paul do Mar</h3>
+      </div>
+      <p class="text-orange-700/70 text-sm font-medium mb-1">Margem Líquida (YTD)</p>
+      <div class="text-2xl font-bold tracking-tight text-orange-600">€ 850,20</div>
+      <div class="mt-4 pt-4 border-t border-orange-200/50">
+        <p class="text-xs font-medium text-orange-800">Próxima amortização de equipamento (Gravadora Laser): € 45,00</p>
+      </div>
+    </div>
+
+    <!-- Orçamento Familiar - Donut Chart Placeholder -->
+    <div class="col-span-1 md:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+      <h3 class="text-slate-800 font-bold mb-4">Despesas Familiares (Outubro)</h3>
+      <div class="flex flex-col md:flex-row items-center gap-8">
+        
+        <!-- CSS Donut Chart (Placeholder) -->
+        <div class="relative w-32 h-32 md:w-40 md:h-40 flex-shrink-0">
+          <svg viewBox="0 0 36 36" class="w-full h-full transform -rotate-90">
+            <!-- Alimentação (40%) -->
+            <path class="text-emerald-500" stroke-dasharray="40, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+            <!-- Casa (30%) -->
+            <path class="text-blue-500" stroke-dasharray="30, 100" stroke-dashoffset="-40" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+            <!-- Transportes (20%) -->
+            <path class="text-amber-500" stroke-dasharray="20, 100" stroke-dashoffset="-70" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+            <!-- Outros (10%) -->
+            <path class="text-slate-300" stroke-dasharray="10, 100" stroke-dashoffset="-90" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="4" />
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center flex-col">
+            <span class="text-2xl font-bold text-slate-800">€ 1.8k</span>
+            <span class="text-xs text-slate-500">Total</span>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex-1 space-y-3 w-full">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+              <span class="text-sm font-medium text-slate-700">Alimentação</span>
+            </div>
+            <span class="text-sm font-semibold text-slate-900">40%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+              <span class="text-sm font-medium text-slate-700">Casa / Arrendamento</span>
+            </div>
+            <span class="text-sm font-semibold text-slate-900">30%</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+              <span class="text-sm font-medium text-slate-700">Transportes</span>
+            </div>
+            <span class="text-sm font-semibold text-slate-900">20%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
