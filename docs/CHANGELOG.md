@@ -9,7 +9,7 @@ Este documento mantém o registo contínuo de todas as atualizações, novas fea
 - Scripting de automação DevOps (`git_sync.sh` e `nas_autoupdate.sh`).
 - Esquema de coleções para importação direta no PocketBase (`pb_schema.json`).
 - Integração da framework **Svelte** no Astro para estado reativo.
-- Componente de Validação de CSV interativo com leitura *Client-Side* via `papaparse` (`CsvStaging.svelte`).
+- Componente de Validação interativo com leitura *Client-Side* de ficheiros Excel (XLS/XLSX) via `SheetJS (xlsx)` (`CsvStaging.svelte`).
 - Cliente oficial SDK ligado ao frontend (`pocketbase.ts`).
 - Manuais complementados (`VERSIONAMENTO.md`, `MANUAL_UTILIZADOR.md`).
 

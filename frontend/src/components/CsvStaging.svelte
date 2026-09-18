@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Papa from 'papaparse';
+  import * as XLSX from 'xlsx';
   // TODO: Import pocketbase instance
   
   let pendingRows: Array<{
@@ -23,27 +23,40 @@
     if (!file) return;
 
     isLoading = true;
-    Papa.parse(file, {
-      header: true,
-      skipEmptyLines: true,
-      complete: (results) => {
-        // Here we map generic bank CSV columns to our app structure
-        // This is a naive implementation that should be adjusted based on the specific bank's CSV format
-        const rows = results.data.map((row: any, index) => {
-          // Assume basic columns like 'Date', 'Description', 'Amount' exist
-          // We can write more sophisticated parsing later based on the user's specific bank
-          const dateStr = row.Date || row.data || row.Data || new Date().toLocaleDateString();
-          const descStr = row.Description || row.Descricao || row.Descrição || JSON.stringify(row);
-          const amountStr = row.Amount || row.Valor || row.Montante || "0";
-          const amount = parseFloat(amountStr.replace(',', '.'));
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        
+        // Pega na primeira folha (sheet) do Excel
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        
+        // Converte para JSON
+        const rawRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+        
+        const rows = rawRows.map((row: any, index) => {
+          // Extrair as colunas mais comuns. Isto pode ser aperfeiçoado perante o formato real do teu banco.
+          const dateStr = row.Data || row.Date || row.data || new Date().toLocaleDateString();
+          const descStr = row.Descricao || row.Descrição || row.Description || JSON.stringify(row);
+          const amountVal = row.Valor || row.Montante || row.Amount || 0;
+          
+          let amount = 0;
+          if (typeof amountVal === 'number') {
+            amount = amountVal;
+          } else if (typeof amountVal === 'string') {
+            amount = parseFloat(amountVal.replace(',', '.'));
+          }
           
           return {
-            id: `row-${index}`,
+            id: `row-${Date.now()}-${index}`,
             date: dateStr,
             desc: descStr,
-            amount: amount,
+            amount: amount || 0,
             type: amount >= 0 ? "Receita" : "Despesa",
-            suggestion_mod: "Família", // Default module
+            suggestion_mod: "Família",
             suggestion_cat: "Por Categorizar",
             raw: row
           };
@@ -54,13 +67,13 @@
         
         // Reset file input
         if (fileInput) fileInput.value = '';
-      },
-      error: (error) => {
-        console.error("Error parsing CSV:", error);
-        alert("Erro ao ler o ficheiro CSV. Verifica se o formato é válido.");
+      } catch (error) {
+        console.error("Erro a processar o ficheiro Excel:", error);
+        alert("Ocorreu um erro ao ler o ficheiro Excel.");
         isLoading = false;
       }
-    });
+    };
+    reader.readAsArrayBuffer(file);
   }
   
   function approveRow(id: string) {
@@ -81,12 +94,12 @@
 
 <div class="space-y-6">
   <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Validação de CSV</h2>
+    <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Validação de Extrato</h2>
     
     <div>
       <input 
         type="file" 
-        accept=".csv" 
+        accept=".xls,.xlsx,.csv" 
         class="hidden" 
         bind:this={fileInput} 
         on:change={handleFileUpload}
@@ -100,7 +113,7 @@
           <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
           Processando...
         {:else}
-          + Fazer Upload CSV
+          + Fazer Upload Extrato (XLS/XLSX)
         {/if}
       </button>
     </div>
