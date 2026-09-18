@@ -2,7 +2,7 @@ import PocketBase from 'pocketbase';
 
 // Para o desenvolvimento local, liga-se ao porto 8090.
 // Em produção (Docker), pode usar uma variável de ambiente pública do Vite/Astro.
-const PB_URL = import.meta.env.PUBLIC_POCKETBASE_URL || 'http://localhost:8070';
+const PB_URL = import.meta.env.PUBLIC_POCKETBASE_URL || 'http://localhost:8045';
 
 export const pb = new PocketBase(PB_URL);
 
