@@ -12,10 +12,10 @@ Este documento mantém o registo contínuo de todas as atualizações, novas fea
 - Componente de Validação interativo com leitura *Client-Side* de ficheiros Excel (XLS/XLSX) via `SheetJS (xlsx)` (`CsvStaging.svelte`).
 - Cliente oficial SDK ligado ao frontend (`pocketbase.ts`).
 - Manuais complementados (`VERSIONAMENTO.md`, `MANUAL_UTILIZADOR.md`).
+- **Injeção direta das transações aprovadas na grelha de Staging (UI) para a Base de Dados (tabela `transactions`).**
 
 ### Por Fazer
-- Injeção das aprovações da grelha de Staging diretamente na DB (transações).
-- Desenvolvimento do Dashboard com leitura real a partir do PocketBase.
+- Desenvolvimento do Dashboard Global com leitura real a partir do PocketBase.
 - Lógica de autenticação e RBAC.
 
 ## [0.1.0] - 2026-09-18

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import * as XLSX from 'xlsx';
-  // TODO: Import pocketbase instance
+  import { pb } from '../lib/pocketbase';
   
   let pendingRows: Array<{
     id: string;
@@ -35,20 +35,28 @@
         const worksheet = workbook.Sheets[firstSheetName];
         
         // Converte para JSON
-        const rawRows = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+        // O ficheiro tem um título na primeira linha ("Listagem de Movimentos"), 
+        // por isso dizemos ao SheetJS para usar a linha de índice 1 (a segunda linha) como cabeçalho.
+        const rawRows = XLSX.utils.sheet_to_json(worksheet, { range: 1, defval: "" });
         
         const rows = rawRows.map((row: any, index) => {
-          // Extrair as colunas mais comuns. Isto pode ser aperfeiçoado perante o formato real do teu banco.
-          const dateStr = row.Data || row.Date || row.data || new Date().toLocaleDateString();
-          const descStr = row.Descricao || row.Descrição || row.Description || JSON.stringify(row);
-          const amountVal = row.Valor || row.Montante || row.Amount || 0;
+          // Extrair as colunas baseadas no layout específico (Data Operação, Descrição, Montante( EUR ))
+          const dateStr = row["Data Operação"] || row["Data valor"] || row.Data || "";
+          const descStr = row["Descrição"] || row.Descricao || row.Description || JSON.stringify(row);
+          const amountVal = row["Montante( EUR )"] || row.Valor || row.Montante || 0;
           
           let amount = 0;
           if (typeof amountVal === 'number') {
             amount = amountVal;
           } else if (typeof amountVal === 'string') {
-            amount = parseFloat(amountVal.replace(',', '.'));
+            // Remove espaços invisíveis (milhares) e converte vírgulas para pontos decimais.
+            // Ex: "-1 929,21" -> "-1929.21"
+            const limpo = amountVal.replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
+            amount = parseFloat(limpo);
           }
+          
+          // Ignorar linhas que não têm dados reais (por vezes o SheetJS apanha linhas vazias no fim)
+          if (!dateStr && amount === 0) return null;
           
           return {
             id: `row-${Date.now()}-${index}`,
@@ -56,12 +64,13 @@
             desc: descStr,
             amount: amount || 0,
             type: amount >= 0 ? "Receita" : "Despesa",
-            suggestion_mod: "Família",
+            suggestion_mod: "Família", // Módulo pré-definido, mais tarde podemos tentar adivinhar com Regex na descrição
             suggestion_cat: "Por Categorizar",
             raw: row
           };
-        });
+        }).filter(Boolean); // Remove os nulos (linhas vazias ignoradas)
         
+        // @ts-ignore
         pendingRows = [...pendingRows, ...rows];
         isLoading = false;
         
@@ -76,19 +85,60 @@
     reader.readAsArrayBuffer(file);
   }
   
-  function approveRow(id: string) {
-    // Lógica para enviar para o PocketBase
-    console.log("Approving row", id);
-    pendingRows = pendingRows.filter(row => row.id !== id);
+  // Mapeamento entre os valores da UI (em PT) e as opções da base de dados (Inglês, minúsculas)
+  const moduleMap: Record<string, string> = {
+    "Família": "family",
+    "Arrendamento": "real_estate",
+    "Projeto": "project"
+  };
+
+  async function approveRow(id: string) {
+    const rowToApprove = pendingRows.find(r => r.id === id);
+    if (!rowToApprove) return;
+
+    try {
+      // 1. Opcional: Se quisermos suportar a categoria no futuro, criaríamos a categoria aqui primeiro.
+      // Por agora, ignoramos a relação e inserimos diretamente a transação.
+      
+      const record = {
+          description: rowToApprove.desc,
+          amount: Math.abs(rowToApprove.amount), // No DB gravamos o absoluto e definimos type
+          date: rowToApprove.date, // Formato DD-MM-YYYY precisa de conversão para YYYY-MM-DD
+          module: moduleMap[rowToApprove.suggestion_mod] || "family",
+          type: rowToApprove.amount >= 0 ? "income" : "expense",
+          status: "approved",
+          is_capex: false,
+          // category: "" -> A preencher quando fizermos a lógica relacional das categorias
+      };
+
+      // Converter data PT (DD-MM-YYYY) para ISO se necessário
+      const parts = rowToApprove.date.split('-');
+      if (parts.length === 3) {
+        record.date = `${parts[2]}-${parts[1]}-${parts[0]} 12:00:00Z`; // Formato base aceite pelo PocketBase
+      }
+
+      await pb.collection('transactions').create(record);
+      
+      // Remover da grelha (UI)
+      pendingRows = pendingRows.filter(row => row.id !== id);
+      console.log("Transação gravada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao gravar transação no PocketBase:", error);
+      alert("Ocorreu um erro ao comunicar com a Base de Dados. Tens o backend ligado?");
+    }
   }
   
   function rejectRow(id: string) {
     pendingRows = pendingRows.filter(row => row.id !== id);
   }
   
-  function approveAll() {
-    console.log("Approving all rows");
-    pendingRows = [];
+  async function approveAll() {
+    console.log("A aprovar todas as linhas sequencialmente...");
+    // Copiamos os IDs para evitar problemas com reatividade no loop
+    const ids = pendingRows.map(r => r.id);
+    for (const id of ids) {
+      await approveRow(id);
+    }
   }
 </script>
 
