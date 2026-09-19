@@ -5,7 +5,7 @@ services:
     image: ghcr.io/muchobien/pocketbase:latest
     container_name: pl-pocketbase
     restart: unless-stopped
-    command: serve --http="0.0.0.0:8045"
+    command: serve --http="0.0.0.0:8045" --dir="/pb_data"
     ports:
       - "8045:8045"
     volumes:
