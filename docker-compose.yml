@@ -5,14 +5,14 @@ services:
     image: ghcr.io/muchobien/pocketbase:latest
     container_name: pl-pocketbase
     restart: unless-stopped
-    command: serve --http="0.0.0.0:8045" --dir="/pb_data"
+    command: serve --http="0.0.0.0:8055" --dir="/pb_storage"
     ports:
-      - "8045:8045"
+      - "8055:8055"
     volumes:
-      - ./pb_data:/pb_data
+      - ./pb_storage:/pb_storage
       - ./pb_public:/pb_public
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:8045/api/health || exit 1
+      test: wget --no-verbose --tries=1 --spider http://localhost:8055/api/health || exit 1
       interval: 30s
       timeout: 10s
       retries: 3
@@ -26,6 +26,6 @@ services:
     ports:
       - "4321:4321"
     environment:
-      - PUBLIC_POCKETBASE_URL=http://pocketbase:8045
+      - PUBLIC_POCKETBASE_URL=http://pocketbase:8055
     depends_on:
       - pocketbase
